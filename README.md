@@ -1,6 +1,8 @@
-# PROJECT NAME
+# Imacry
 
 **WARNING: these instructions work best on a unix based system**
+
+##**THIS WAS MADE FOR EDUCATIONAL PURPOSES**
 
 ## Setup
 
