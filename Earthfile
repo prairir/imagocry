@@ -14,7 +14,7 @@ client-build:
 	COPY main.go .
 	# copy cmd and whatever else in dir mode
 	# this is like `cp -r`
-	COPY --dir cmd/ ./
+	COPY --dir cmd/ pkg/ ./
 	# build to file `imacry`
 	RUN go build -o imacry main.go
 	# save file to outside container

