@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/prairir/imacry/pkg/config"
+	"github.com/prairir/imacry/pkg/walk"
 	"github.com/spf13/cobra"
 )
 
@@ -34,10 +35,19 @@ func init() {
 	// encryptCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
+type printer struct{}
+
+func (p printer) Do(filePath string) error {
+	fmt.Println(filePath)
+	return nil
+}
+
 func RunEncrypt(cmd *cobra.Command, args []string) {
 	// set the state first thing
 	config.Config.State = config.EncryptState
 	fmt.Printf("config: %#v\n", config.Config)
 
 	fmt.Println("encrypt run")
+	p := printer{}
+	walk.Walk(config.Config.Base, p)
 }
