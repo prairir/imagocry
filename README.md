@@ -15,8 +15,17 @@ You need Earthly dependencies
 ## Building
 
 ``` sh
-earthly +client-build
+earthly +build
 ```
+
+This only builds the binary and saves it to an earthly artifact. Kinda useless by itself
+If you want to build and then download the binary to your local machine run 
+
+``` sh
+earthly +save-binary
+```
+
+again **THIS IS A RANSOMWARE BOT** so be careful
 
 ## Testing
 

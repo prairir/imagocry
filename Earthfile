@@ -6,8 +6,8 @@ deps:
 	COPY go.mod go.sum .
 	RUN go mod download
 
-# build client
-client-build:
+# builds the client binary
+build:
 	# build off of deps stage
 	FROM +deps
 	# copy main file
@@ -18,11 +18,17 @@ client-build:
 	# build to file `imacry`
 	RUN go build -o imacry main.go
 	# save file to outside container
+	SAVE ARTIFACT imacry
+
+# gets the binary from build and then saves it to local machine
+save-binary:
+	FROM scratch
+	COPY +build/imacry imacry
 	SAVE ARTIFACT imacry AS LOCAL imacry
 
 # make docker container
 docker:
 	FROM ubuntu:21.04
-	COPY +client-build/imacry imacry
+	COPY +build/imacry imacry
 
 	SAVE IMAGE imacry-run:latest

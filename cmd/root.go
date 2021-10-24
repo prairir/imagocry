@@ -6,7 +6,6 @@ import (
 
 	"github.com/apex/log"
 	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 
 	"github.com/spf13/viper"
 
@@ -35,13 +34,13 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 	pflags.StringP("cc-address", "a", "", "command and control server address")
-	viper.BindPFlag("cc-address", pflag.Lookup("cc-address"))
+	viper.BindPFlag("cc-address", pflags.Lookup("cc-address"))
 
 	pflags.StringP("password", "p", "", "encryption/decryption password.")
-	viper.BindPFlag("password", pflag.Lookup("password"))
+	viper.BindPFlag("password", pflags.Lookup("password"))
 
 	pflags.StringP("base", "b", "", "base path to start encrypting")
-	viper.BindPFlag("base", pflag.Lookup("base"))
+	viper.BindPFlag("base", pflags.Lookup("base"))
 
 }
 
