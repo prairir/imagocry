@@ -56,18 +56,22 @@ func step(pathName string, eg *errgroup.Group, fa FileAction) error {
 		// get the absolute path name
 		absoluteName := filepath.Join(pathName, file.Name())
 
-		// launch fa.Do in go routine
-		eg.Go(func() error {
-			return fa.Do(absoluteName)
-		})
-
 		// recursively call so it crawls the entire path
+		// continue if a directory so we dont run file action
+		// on directories
 		if file.IsDir() {
 			err = step(absoluteName, eg, fa)
 			if err != nil {
 				return fmt.Errorf("walk.step Error: %w", err)
 			}
+			continue
 		}
+
+		// launch fa.Do in go routine
+		eg.Go(func() error {
+			return fa.Do(absoluteName)
+		})
+
 	}
 
 	// close file descriptor
