@@ -4,6 +4,9 @@
 
 ## **THIS WAS MADE FOR EDUCATIONAL PURPOSES**
 
+*Technically* this isnt a ransomware bot. There is no ransom to be payed.
+This does mimic a ransomware bot in the fact it encrypts all the files, talks to a server, and then decrypts all the files. 
+
 ## Setup
 
 We use [Earthly](https://earthly.dev) to build files and images
