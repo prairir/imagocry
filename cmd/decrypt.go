@@ -1,9 +1,15 @@
 package cmd
 
 import (
+	"crypto/aes"
 	"fmt"
 
+	"github.com/apex/log"
+	"github.com/prairir.imacry/pkg/decryptfile"
 	"github.com/prairir/imacry/pkg/config"
+	"github.com/prairir/imacry/pkg/walk"
+
+	//"github.com/prairir/imacry/cmd/walk"
 	"github.com/spf13/cobra"
 )
 
@@ -38,6 +44,34 @@ func RunDecrypt(cmd *cobra.Command, args []string) {
 	// set the state to decrypt
 	config.Config.State = config.DecryptState
 	fmt.Printf("config: %#v\n", config.Config)
+	df := decryptfile.DecryptFile{}
+	err := walk.Walk(config.Config.Base, df)
+	if err != nil {
+		log.Log.Fatalf("Fatal error: %s", err)
+	}
+	/*
+		fileData, err := os.ReadFile("/home/testFile.txt")
+		if err != nil {
+			fmt.Errorf("Decrypt Error: %w", err)
+		}
+		//fmt.Printf("%s\n", string(fileData))
+		decryptedData := DecryptAES([]byte("thisis32bitlongpassphraseimusing"), fileData)
+		os.WriteFile("/home/testFile.txt", decryptedData, 0644)
+		//fmt.Printf("password: %#v\n", config.Config.Password)
+		fmt.Println("decrypt complete")
+	*/
+}
 
-	fmt.Println("decrypt")
+func DecryptAES(key []byte, cipherText []byte) []byte {
+	cipher, err := aes.NewCipher(key)
+	if err != nil {
+		panic(err)
+	}
+
+	plainText := make([]byte, len(cipherText))
+	cipher.Decrypt(plainText, cipherText)
+
+	s := string(plainText[:])
+	fmt.Println("DECRYPTED:", s)
+	return plainText
 }
