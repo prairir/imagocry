@@ -48,6 +48,7 @@ func (ef EncryptFile) Do(filePath string) error {
 		return fmt.Errorf("encryptfile.Do error: %w", err)
 	}
 
+	outfile.Write(iv)
 	buf := make([]byte, 1024)
 	stream := cipher.NewCTR(cipherBlock, iv)
 
@@ -68,9 +69,6 @@ func (ef EncryptFile) Do(filePath string) error {
 			return fmt.Errorf("encryptfile.Do error: %w", err)
 		}
 	}
-
-	// append the IV
-	outfile.Write(iv)
 
 	err = infile.Close()
 	if err != nil {
