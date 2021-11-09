@@ -17,7 +17,7 @@ func (df DecryptFile) Do(filePath string) error {
 	password := config.Config.Password
 	// Check to make sure the password is not empty.
 	if password == "" {
-		return fmt.Errorf("encryptfile.Do error: No password in config.Config")
+		return fmt.Errorf("decryptfile.Do error: No password in config.Config")
 	}
 
 	// Create a cipherblock from the password
