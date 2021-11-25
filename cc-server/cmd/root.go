@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/apex/log"
 	"github.com/spf13/cobra"
 
@@ -74,6 +76,11 @@ func initConfig() {
 	err := config.UnmarshalConfig()
 	if err != nil {
 		log.Fatalf("Couldnt unmarshal config: %s", err)
+	}
+
+	// making sure it is proper size
+	if (len(config.Config.Password)-16)/8 < 1 {
+		log.Fatalf("Password is length: %d .It requires length 16 + 8n where n is over 0", len(config.Config.Password))
 	}
 }
 
