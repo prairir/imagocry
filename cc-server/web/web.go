@@ -1,27 +1,66 @@
 package web
 
 import (
-	"fmt"
+	"net/http"
+
 	"github.com/apex/log"
 	"github.com/gorilla/websocket"
-	"net/http"
+	"github.com/prairir/imacry/cc-server/pkg/config"
+	"github.com/prairir/imacry/cc-server/pkg/handler"
 )
 
 // default options
 var upgrader = websocket.Upgrader{}
 
-func initRoute(w http.ResponseWriter, r *http.Request) {
-	c, err := upgrader.Upgrade(w, r, nil)
-	fmt.Println("hello")
+func wsHandler(w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Errorf("init error: %s", err)
+		return
 	}
-	defer c.Close()
+	log.Infof("New Connection from %s", r.RemoteAddr)
+
+	// ws event loop dispatcher
+	for {
+		mt, message, err := conn.ReadMessage()
+		if err != nil {
+			log.Errorf("fatal read error: %s", err)
+			break
+		}
+
+		// if connection closes
+		if mt == websocket.CloseNormalClosure {
+			break
+		}
+
+		// init handler
+		if mt == websocket.TextMessage && string(message[:5]) == "init:" {
+			err = handler.Init(message, conn)
+			if err != nil {
+				log.Errorf("fatal init error: %s", err)
+				break
+			}
+		}
+
+		// Heart Beat handler
+		// Heart Beat doubles as a trigger event
+		if mt == websocket.TextMessage && string(message[:3]) == "hb:" {
+			handler.HeartBeat(message, conn)
+		}
+
+	}
+
+	// closing the websocket
+	err = conn.Close()
+	if err != nil {
+		log.Errorf("fatal closing error: %s", err)
+	}
 }
 
 func Run() {
-	http.HandleFunc("/init", initRoute)
+	http.HandleFunc("/", wsHandler)
 
-	log.Fatalf("%s", http.ListenAndServe(":80", nil))
+	log.Infof("Listen and Serve on port %s", config.Config.Port)
+	log.Fatalf("%s", http.ListenAndServe(":"+config.Config.Port, nil))
 
 }

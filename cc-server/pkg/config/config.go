@@ -10,7 +10,7 @@ import (
 
 type config struct {
 	Password      string        `mapstructure:"password"`
-	Port          uint          `mapstructure:"port"`
+	Port          string        `mapstructure:"port"`
 	TriggerTime   time.Time     `mapstructure:"trigger-time"`
 	TriggerLength time.Duration `mapstructure:"trigger-length"`
 }
