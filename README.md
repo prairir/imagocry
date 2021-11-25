@@ -48,8 +48,17 @@ and then to run
 docker run -it imacry-run:latest /bin/bash
 ```
 
+## Command & Control Server
+You can checkout the cc servers README at `./cc-server/README`
+
 ## Contributing
 You can read all about contributing to this project in `CONTRIBUTING.md`
 
 ## Architecture
 You can read about it in `ARCHITECTURE.md`
+
+## State and Communication Sequence
+
+[Sequence Diagram](pictures/imacry_sequence_diagram.png)
+
+

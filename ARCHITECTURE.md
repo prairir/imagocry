@@ -6,6 +6,10 @@ If you want to familiarize yourself with the code base and *generally* how it wo
 ## High Level TLDR
 <DESCRIPTION>
 
+## Sequence Diagram
+
+[Sequence Diagram](pictures/imacry_sequence_diagram.png)
+
 ## Code Map
 
 #### Code Map Legend
