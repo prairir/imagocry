@@ -51,10 +51,25 @@ This could be ran by a number of ways
 
 This is just the binary by itself. Im sure you can figure this one out
 
-### command line from inside docker container
+### Command line from inside docker container
+
+Launch the docker container
 
 ``` sh
 docker run -p <port num>:80 imacry-cc-server:latest
 ```
 You can bind to whatever port number you want
 
+### Systemd launching on bare metal
+
+This is a systemd service, you can launch it like normal systemd services. 
+
+**YOU NEED TO CHANGE THE ExecStart PATH**
+You need to change it to the actual path 
+
+
+### Systemd launching a docker container
+
+This is a systemd service, you can launch it like normal systemd services. 
+
+You need to have the image on your computer for this to work
