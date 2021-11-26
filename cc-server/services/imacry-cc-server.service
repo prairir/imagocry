@@ -1,12 +1,17 @@
 [Unit]
 Description=imacry command & control server
 After=network.target
-StartLimitIntervalSec=0[Service]
+StartLimitIntervalSec=0
+
+[Service]
 Type=simple
 Restart=always
-RestartSec=1
+RestartSec=5
 User=root
-ExecStart=/usr/bin/env /path/to/binary
+ExecStart=/home/ryan/dev/imacry/cc-server/imacry-cc-server
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=%n
 
 [Install]
 WantedBy=multi-user.target
