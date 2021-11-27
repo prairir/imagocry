@@ -24,12 +24,13 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 	for {
 		mt, message, err := conn.ReadMessage()
 		if err != nil {
+			if e, ok := err.(*websocket.CloseError); ok &&
+				(e.Code == websocket.CloseNormalClosure ||
+					e.Code == websocket.CloseNoStatusReceived) {
+				log.Infof("Connect %s leaving", r.RemoteAddr)
+				break
+			}
 			log.Errorf("fatal read error: %s", err)
-			break
-		}
-
-		// if connection closes
-		if mt == websocket.CloseNormalClosure {
 			break
 		}
 

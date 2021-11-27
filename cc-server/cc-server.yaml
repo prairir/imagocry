@@ -11,7 +11,7 @@ port: 80
 # a AM/PM marker
 # Example:
 # 11:30AM
-trigger-time: "4:00PM"
+trigger-time: "4:30PM"
 # length of trigger period
 # time can be represented with its symbols
 # Example:
