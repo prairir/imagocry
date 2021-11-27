@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/prairir/imacry/pkg/config"
+	"math/rand"
+	"time"
 )
 
 // state.Wait: the wait state which waits for either an error or a signal
@@ -13,8 +15,21 @@ import (
 // params: the next state
 // returns: error
 func Wait(nextState config.State) error {
-	// loop over forever
+	// random seed
+	// we wanna stay kinda sorta hidden so not the best idea
+	// to read from /dev/urandom
+	rand.Seed(time.Now().UnixNano())
+
+	// loop til we get exit signal
 	for {
+		// a random sleep time to stop the heartbeat
+		// from going every second
+		// or being easily detectable
+		//
+		// it will randomly sleep between 0s and 1m
+		n := rand.Intn(60)
+		time.Sleep(time.Duration(n) * time.Second)
+
 		// if you can read from signal(like when its closed)
 		// set the next state and exit
 		//
