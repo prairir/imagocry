@@ -22,8 +22,6 @@ func HeartBeat() {
 			return
 		}
 
-		fmt.Println(string(message))
-
 		// if its a text message and the message is `hb: 1`
 		// close the signal channel and exit
 		// else if its a text message and the message is `hb: 0`
