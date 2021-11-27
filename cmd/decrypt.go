@@ -47,6 +47,6 @@ func RunDecrypt(cmd *cobra.Command, args []string) {
 	// Decrypt from the base file path walking through all files on the system
 	err := walk.Walk(config.Config.Base, df)
 	if err != nil {
-		log.Log.Fatalf("Fatal error: %s", err)
+		log.Fatalf("Fatal error: %s", err)
 	}
 }
