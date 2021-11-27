@@ -59,6 +59,6 @@ You can read about it in `ARCHITECTURE.md`
 
 ## State and Communication Sequence
 
-[Sequence Diagram](pictures/imacry_sequence_diagram.png)
+![Sequence Diagram](pictures/imacry_sequence_diagram.png)
 
 
