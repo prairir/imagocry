@@ -93,6 +93,10 @@ func RunImacry(cmd *cobra.Command, args []string) {
 				log.Fatalf("Fatal error: %s", err)
 			}
 		case config.ExitState:
+			err := state.Exit()
+			if err != nil {
+				log.Fatalf("Fatal error: %s", err)
+			}
 			log.Info("Finished, have a good day :)")
 			return
 		default:

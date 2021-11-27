@@ -13,12 +13,14 @@ import (
 // returns: error
 func Exit() error {
 	// close the socket
-	err := config.Config.Conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
+	err := config.Config.Conn.WriteControl(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""), time.Now().Add(time.Second))
 	if err != nil {
 		return fmt.Errorf("state.Exit error: %w", err)
 	}
 
-	// wait a second to make sure its finished
-	time.Sleep(time.Second * 3)
+	err = config.Config.Conn.Close()
+	if err != nil {
+		return fmt.Errorf("state.Exit error: %w", err)
+	}
 	return nil
 }
