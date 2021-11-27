@@ -44,7 +44,6 @@ func Init(nextState config.State) error {
 
 		// if its a text message and starts with `pass:` then make the rest the password
 		// else return an error
-		fmt.Println(string(message))
 		if mt == websocket.TextMessage && string(message[:5]) == "pass:" {
 			config.Config.Password = string(message[6:])
 		} else {

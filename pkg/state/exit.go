@@ -19,8 +19,6 @@ func Exit() error {
 	}
 
 	// wait a second to make sure its finished
-	select {
-	case <-time.After(time.Second):
-	}
+	time.Sleep(time.Second * 3)
 	return nil
 }
