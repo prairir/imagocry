@@ -1,0 +1,19 @@
+[Unit]
+Description=imacry command & control server container
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+RestartSec=5
+User=root
+ExecStartPre=-/usr/bin/docker stop imacry-cc-server
+ExecStartPre=-/usr/bin/docker pull imacry-cc-server
+ExecStart=/usr/bin/docker run --publish 80:80 imacry-cc-server
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=%n
+
+[Install]
+WantedBy=multi-user.target

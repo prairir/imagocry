@@ -1,0 +1,32 @@
+deps:
+	FROM golang:1.16
+	WORKDIR /app
+	COPY go.mod go.sum .
+	RUN go mod download
+
+build-cc-server:
+	# build off of deps stage
+	FROM +deps
+	# copy main file
+	COPY main.go .
+	# copy cmd and whatever else in dir mode
+	# this is like `cp -r`
+	COPY --dir cmd/ pkg/ web/ ./
+	# build to file `imacry-cc-server`
+	RUN CGO_ENABLED=0 go build -o imacry-cc-server main.go
+	# save file to outside container
+	SAVE ARTIFACT imacry-cc-server AS LOCAL imacry-cc-server
+
+docker:
+	FROM scratch
+	COPY +build-cc-server/imacry-cc-server imacry-cc-server
+
+	# copy config into container
+	COPY cc-server.yaml .
+
+	# expose port 80
+	EXPOSE 80
+
+	CMD ["./imacry-cc-server", "--config", "./cc-server.yaml"]
+
+	SAVE IMAGE imacry-cc-server:latest

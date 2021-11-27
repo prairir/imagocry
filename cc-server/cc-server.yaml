@@ -1,0 +1,19 @@
+# this file is filled with default values and explanations
+---
+# encryption/decryption password
+password: "123456789012345678901234"
+# port to run on
+port: 80
+# encrypt/decrypt event trigger time
+# in format "h:mma"
+# h - Hour in am/pm (1-12)
+# m - minute in hour
+# a AM/PM marker
+# Example:
+# 11:30AM
+trigger-time: "4:00PM"
+# length of trigger period
+# time can be represented with its symbols
+# Example:
+# 3h40m100s1µs
+trigger-length: "1h"
