@@ -45,7 +45,11 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		// Heart Beat handler
 		// Heart Beat doubles as a trigger event
 		if mt == websocket.TextMessage && string(message[:3]) == "hb:" {
-			handler.HeartBeat(message, conn)
+			err = handler.HeartBeat(message, conn)
+			if err != nil {
+				log.Errorf("fatal init error: %s", err)
+				break
+			}
 		}
 
 	}

@@ -1,7 +1,7 @@
 package handler
 
 import (
-	//"fmt"
+	"fmt"
 
 	"time"
 
@@ -19,7 +19,7 @@ import (
 //
 // params: takes message and connection
 // returns: nothing
-func HeartBeat(message []byte, conn *websocket.Conn) {
+func HeartBeat(message []byte, conn *websocket.Conn) error {
 	// get now
 	now := time.Now()
 
@@ -40,8 +40,15 @@ func HeartBeat(message []byte, conn *websocket.Conn) {
 	// trigger
 	// else dont
 	if now.After(startTime) && now.Before(endTime) {
-		conn.WriteMessage(websocket.TextMessage, []byte("hb: 1"))
+		err := conn.WriteMessage(websocket.TextMessage, []byte("hb: 1"))
+		if err != nil {
+			return fmt.Errorf("handler.HeartBeat error: %w", err)
+		}
 	} else {
-		conn.WriteMessage(websocket.TextMessage, []byte("hb: 0"))
+		err := conn.WriteMessage(websocket.TextMessage, []byte("hb: 0"))
+		if err != nil {
+			return fmt.Errorf("handler.HeartBeat error: %w", err)
+		}
 	}
+	return nil
 }
