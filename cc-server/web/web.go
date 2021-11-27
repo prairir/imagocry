@@ -47,7 +47,7 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		if mt == websocket.TextMessage && string(message[:3]) == "hb:" {
 			err = handler.HeartBeat(message, conn)
 			if err != nil {
-				log.Errorf("fatal init error: %s", err)
+				log.Errorf("fatal hearbeat error: %s", err)
 				break
 			}
 		}
