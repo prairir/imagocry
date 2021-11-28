@@ -44,7 +44,7 @@ func init() {
 
 	pflags.StringVar(&cfgFile, "config", "", "config file (default is /etc/imacry-cc-server/cc-server.yaml)")
 
-	pflags.StringP("password", "p", "", "AES password (must be length of 16 + 8n where n is some number over -1)")
+	pflags.StringP("password", "p", "", "AES password (must be length of 16 + 8n where n is some number over 0)")
 	viper.BindPFlag("password", pflags.Lookup("password"))
 
 	pflags.Uint("port", 80, "network port to run on")

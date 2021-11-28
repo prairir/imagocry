@@ -24,12 +24,13 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 	for {
 		mt, message, err := conn.ReadMessage()
 		if err != nil {
+			if e, ok := err.(*websocket.CloseError); ok &&
+				(e.Code == websocket.CloseNormalClosure ||
+					e.Code == websocket.CloseNoStatusReceived) {
+				log.Infof("Connect %s leaving", r.RemoteAddr)
+				break
+			}
 			log.Errorf("fatal read error: %s", err)
-			break
-		}
-
-		// if connection closes
-		if mt == websocket.CloseNormalClosure {
 			break
 		}
 
@@ -45,7 +46,11 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		// Heart Beat handler
 		// Heart Beat doubles as a trigger event
 		if mt == websocket.TextMessage && string(message[:3]) == "hb:" {
-			handler.HeartBeat(message, conn)
+			err = handler.HeartBeat(message, conn)
+			if err != nil {
+				log.Errorf("fatal hearbeat error: %s", err)
+				break
+			}
 		}
 
 	}

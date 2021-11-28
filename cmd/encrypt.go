@@ -46,6 +46,6 @@ func RunEncrypt(cmd *cobra.Command, args []string) {
 	ef := encryptfile.EncryptFile{}
 	err := walk.Walk(config.Config.Base, ef)
 	if err != nil {
-		log.Log.Fatalf("Fatal error: %s", err)
+		log.Fatalf("Fatal error: %s", err)
 	}
 }

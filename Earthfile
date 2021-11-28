@@ -16,8 +16,8 @@ build:
 	# this is like `cp -r`
 	COPY --dir cmd/ pkg/ ./
 	# build to file `imacry`
-	RUN go build -o imacry main.go
-	# save file to outside container
+	RUN go build -race -o imacry main.go
+	# save file as artifact
 	SAVE ARTIFACT imacry
 
 # gets the binary from build and then saves it to local machine
