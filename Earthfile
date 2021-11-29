@@ -32,3 +32,26 @@ docker:
 	COPY +build/imacry imacry
 
 	SAVE IMAGE imacry-run:latest
+
+# make the benchmarking files
+make-benchmark:
+	FROM ubuntu:21.04
+
+	# copy shell script
+	COPY scripts/test_filebenchmarks.sh .
+
+	# make it executable and then run it
+	RUN chmod +x test_filebenchmarks.sh && \
+		./test_filebenchmarks.sh
+
+	SAVE ARTIFACT /root/file*
+
+# benchmarking docker container
+benchmark:
+	FROM +build
+
+	COPY +make-benchmark/file* /root/
+
+	CMD ["go", "test", "-bench=.", "./..."]
+
+	SAVE IMAGE imacry-benchmark:latest

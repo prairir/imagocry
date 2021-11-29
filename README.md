@@ -48,6 +48,20 @@ and then to run
 docker run -it imacry-run:latest /bin/bash
 ```
 
+## Benchmarking
+
+To make a benchmarking container, run
+
+``` sh
+earthly +benchmarking
+```
+
+and to run it, run
+
+``` sh
+docker run imacry-benchmark
+```
+
 ## Command & Control Server
 You can checkout the cc servers README at `./cc-server/README`
 
@@ -60,5 +74,6 @@ You can read about it in `ARCHITECTURE.md`
 ## State and Communication Sequence
 
 ![Sequence Diagram](pictures/imacry_sequence_diagram.png)
+
 
 
