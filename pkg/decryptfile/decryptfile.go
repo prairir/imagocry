@@ -1,6 +1,7 @@
 package decryptfile
 
 import (
+	"bufio"
 	"crypto/aes"
 	"crypto/cipher"
 	"fmt"
@@ -44,6 +45,8 @@ func (df DecryptFile) Do(filePath string) error {
 		return fmt.Errorf("decryptfile.Do error: %w", err)
 	}
 
+	outfileBuf := bufio.NewWriterSize(outfile, 10240)
+
 	// Get the initialization vector from the beginning of the input file.
 	iv := make([]byte, cipherBlock.BlockSize())
 	if _, err := infile.Read(iv); err != nil {
@@ -57,11 +60,19 @@ func (df DecryptFile) Do(filePath string) error {
 		n, err := infile.Read(buf)
 		if n > 0 {
 			stream.XORKeyStream(buf, buf[:n])
-			outfile.Write(buf[:n])
+			_, err := outfileBuf.Write(buf[:n])
+			if err != nil {
+				return fmt.Errorf("decryptfile.Do error: %w", err)
+			}
+
 		}
 
 		// EOF has been reached
 		if err == io.EOF {
+			err := outfileBuf.Flush()
+			if err != nil {
+				return fmt.Errorf("decryptfile.Do error: %w", err)
+			}
 			break
 		}
 

@@ -1,6 +1,7 @@
 package encryptfile
 
 import (
+	"bufio"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
@@ -48,7 +49,10 @@ func (ef EncryptFile) Do(filePath string) error {
 		return fmt.Errorf("encryptfile.Do error: %w", err)
 	}
 
-	outfile.Write(iv)
+	// write buffer with size of 10KB
+	outfileBuf := bufio.NewWriterSize(outfile, 10240)
+
+	outfileBuf.Write(iv)
 	buf := make([]byte, 1024)
 	stream := cipher.NewCTR(cipherBlock, iv)
 
@@ -56,11 +60,19 @@ func (ef EncryptFile) Do(filePath string) error {
 		n, err := infile.Read(buf)
 		if n > 0 {
 			stream.XORKeyStream(buf, buf[:n])
-			outfile.Write(buf[:n])
+			_, err := outfileBuf.Write(buf[:n])
+			if err != nil {
+				return fmt.Errorf("encryptfile.Do error: %w", err)
+			}
+
 		}
 
 		// if it gets EOF break out of loop
 		if err == io.EOF {
+			err := outfileBuf.Flush()
+			if err != nil {
+				return fmt.Errorf("encryptfile.Do error: %w", err)
+			}
 			break
 		}
 
